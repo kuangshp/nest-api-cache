@@ -1,6 +1,6 @@
 {
   "name": "redis-cache-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "使用redis实现nestjs接口层面的缓存",
   "author": "kuangshp@126.com",
   "license": "MIT",
@@ -33,7 +33,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "build:npm": "rimraf dist && nest build -p tsconfig.npm.build.json"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ioredis": "^4.24.5"
+  },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
     "@nestjs/common": "^7.0.0",
@@ -50,7 +52,6 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
-    "ioredis": "^4.24.5",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "reflect-metadata": "^0.1.13",
