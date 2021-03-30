@@ -1,9 +1,10 @@
-import { CallHandler, ExecutionContext, Injectable } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { REDIS_CACHE_KEY, REDIS_CACHE_EX_SECOND_KEY } from '../../constants';
 import { RedisApiCacheBaseInterceptor } from './redis-api-cache.base.interceptor';
+import { RedisCacheService } from 'src/services/redis-cache/redis-cache.service';
 
 /**
  * @Author: 水痕
@@ -14,7 +15,12 @@ import { RedisApiCacheBaseInterceptor } from './redis-api-cache.base.interceptor
  * @return {*}
  */
 @Injectable()
-export class RedisApiCacheInterceptor extends RedisApiCacheBaseInterceptor {
+export class RedisApiCacheInterceptor implements NestInterceptor {
+  private redisCacheService: RedisCacheService;
+  constructor() {
+    this.redisCacheService = new RedisCacheService()
+  }
+  
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     const request: Request = context.switchToHttp().getRequest();
     // 反射的方法获取接口是否需要缓存

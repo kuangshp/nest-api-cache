@@ -4,13 +4,12 @@ import * as Redis from 'ioredis';
 import { ConfigProvider } from 'src/constants';
 import { IRedisApiCacheConfig } from 'src/interfaces';
 
-@Injectable()
+@Injectable({})
 export class RedisCacheService {
   public client: RedisType;
-  constructor (
-    @Inject(ConfigProvider) private readonly config: IRedisApiCacheConfig,
-  ) { 
-    this.client = new Redis(this.config.redisConfig);
+  constructor () { 
+    // @Inject(ConfigProvider) private readonly config: IRedisApiCacheConfig,
+    // this.client = new Redis(this.config.redisConfig);
   }
 
   /**
