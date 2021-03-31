@@ -3,7 +3,6 @@ import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { REDIS_CACHE_KEY, REDIS_CACHE_EX_SECOND_KEY } from '../../constants';
-import { RedisApiCacheBaseInterceptor } from './redis-api-cache.base.interceptor';
 import { RedisCacheService } from 'src/services/redis-cache/redis-cache.service';
 
 /**
@@ -27,9 +26,11 @@ export class RedisApiCacheInterceptor implements NestInterceptor {
     const isCacheApi = Reflect.getMetadata(REDIS_CACHE_KEY, context.getHandler()) || Reflect.getMetadata(REDIS_CACHE_KEY, context.getClass());
     const redisEXSecond = Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getHandler()) || Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getClass());
     if (isCacheApi) {
+      console.log('走缓存')
       const redisKey = this.redisCacheKey(request.method, request.url);
       const redisData = await this.redisCacheService.get(redisKey);
       if (redisData) {
+        console.log('redis数据返回');
         return of(redisData);
       } else {
         return next.handle().pipe(map(data => {

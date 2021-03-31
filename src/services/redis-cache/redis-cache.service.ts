@@ -1,15 +1,37 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { Redis as RedisType } from 'ioredis';
-import * as Redis from 'ioredis';
 import { ConfigProvider } from 'src/constants';
 import { IRedisApiCacheConfig } from 'src/interfaces';
+import { eventEmitter } from 'src/utils';
+import { RedisService } from 'nestjs-redis';
+import * as Redis from 'ioredis';
+
 
 @Injectable({})
-export class RedisCacheService {
+export class RedisCacheService implements OnModuleInit {
   public client: RedisType;
-  constructor () { 
-    // @Inject(ConfigProvider) private readonly config: IRedisApiCacheConfig,
-    // this.client = new Redis(this.config.redisConfig);
+  constructor (
+    private readonly redisService: RedisService,
+  ) {
+    // this.redisService = new RedisService(redisConfig);
+  }
+
+  onModuleInit() {
+    // const redisConfig = (<IRedisApiCacheConfig>global[ConfigProvider]).redisConfig;
+    // const redisService = new RedisService({
+    //   defaultKey: '',
+    //   clients: {
+        
+    //   },
+    //   size: 0,
+    // });
+    this.client = this.redisService.getClient();
+    // console.log(redisConfig, '===')
+    // const {username, password, host, port, db} = redisConfig;
+    // const url: string = `redis://${username}:${password}@${host}:${port}/${db}?allowUsernameInURI=true`;
+    // this.client = new Redis(url);
+    // console.log('初始化1', url);
+    // console.log('初始化2', this.client);
   }
 
   /**
@@ -39,6 +61,7 @@ export class RedisCacheService {
    * @param key {String} 
    */
   public async get(key: string): Promise<any> {
+    console.log('redis-get方法', this.client);
     const data = await this.client.get(key);
     if (data) {
       return JSON.parse(data);
