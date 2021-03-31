@@ -6,7 +6,7 @@
  * @Company: 
  * @Date: 2021-03-09 15:47:06
  * @LastEditors: 水痕
- * @LastEditTime: 2021-03-31 10:58:14
+ * @LastEditTime: 2021-03-31 12:46:36
  * @FilePath: /redis-cache-api/src/decorators/nest.cache.api.ts
  */
 import { applyDecorators, SetMetadata } from '@nestjs/common';
@@ -25,8 +25,6 @@ const isCache = true;
  * @param {number} exSecond redis缓存过期时间,时间为妙
  * @return {*}
  */
-
-
 export function NestCacheApi(exSecond: number = redisCacheConfig.redisEXSecond): any {
   return applyDecorators(
     SetMetadata(REDIS_CACHE_KEY, isCache),

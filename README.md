@@ -53,14 +53,16 @@
     description: '分页查询角色返回值'
   })
   @HttpCode(HttpStatus.OK)
-  // 加上这个自定义装饰器,可以告知拦截器这个接口要走缓存
+  // 加上这个自定义装饰器,可以告知拦截器这个接口要走缓存,
+  // 如果需要设置缓存时间可以手动加入过期时间@NestCacheApi(2 * 60) 设置2分钟
+  // 不传递过期时间,系统默认以1分钟过期
   @NestCacheApi()
   @Get()
   async roleList(
     @Query() roleReqDto: RoleReqDto,
   ): Promise<RoleListResDtoDto> {
     return await this.roleService.roleList(roleReqDto);
-  }
+}
   ```
-
+  
   
