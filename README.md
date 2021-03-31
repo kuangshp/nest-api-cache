@@ -62,7 +62,7 @@
     @Query() roleReqDto: RoleReqDto,
   ): Promise<RoleListResDtoDto> {
     return await this.roleService.roleList(roleReqDto);
-}
+  }
   ```
   
   
