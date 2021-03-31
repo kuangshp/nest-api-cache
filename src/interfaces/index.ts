@@ -1,19 +1,19 @@
 interface IRedisConfig {
   /** redis端口号 */
-  port: number,
+  port?: number,
   /** redis 地址 */
-  host: string,
+  host?: string,
   /** redis 用户名 */
-  username: string,
+  username?: string,
   /** redis 密码 */
-  password: string,
+  password?: string,
   /** redis使用的数据库 */
-  db: number
+  db?: number
 }
 
 export interface IRedisApiCacheConfig {
   /** redis数据库连接 */
-  redisConfig: IRedisConfig,
+  redisConfig?: IRedisConfig,
   /** redis默认缓存时间 单位为秒 */
   redisEXSecond?: number
 }

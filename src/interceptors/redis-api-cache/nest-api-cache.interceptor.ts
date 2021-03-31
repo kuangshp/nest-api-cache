@@ -14,7 +14,7 @@ import { RedisCacheService } from 'src/services/redis-cache/redis-cache.service'
  * @return {*}
  */
 @Injectable()
-export class RedisApiCacheInterceptor implements NestInterceptor {
+export class NestApiCacheInterceptor implements NestInterceptor {
   private redisCacheService: RedisCacheService;
   constructor() {
     this.redisCacheService = new RedisCacheService()
@@ -26,11 +26,9 @@ export class RedisApiCacheInterceptor implements NestInterceptor {
     const isCacheApi = Reflect.getMetadata(REDIS_CACHE_KEY, context.getHandler()) || Reflect.getMetadata(REDIS_CACHE_KEY, context.getClass());
     const redisEXSecond = Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getHandler()) || Reflect.getMetadata(REDIS_CACHE_EX_SECOND_KEY, context.getClass());
     if (isCacheApi) {
-      console.log('走缓存')
       const redisKey = this.redisCacheKey(request.method, request.url);
       const redisData = await this.redisCacheService.get(redisKey);
       if (redisData) {
-        console.log('redis数据返回');
         return of(redisData);
       } else {
         return next.handle().pipe(map(data => {

@@ -1,37 +1,16 @@
-import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Redis as RedisType } from 'ioredis';
-import { ConfigProvider } from 'src/constants';
+import { REDIS_CONFIG_PROVIDER } from 'src/constants';
 import { IRedisApiCacheConfig } from 'src/interfaces';
-import { eventEmitter } from 'src/utils';
-import { RedisService } from 'nestjs-redis';
 import * as Redis from 'ioredis';
 
 
 @Injectable({})
 export class RedisCacheService implements OnModuleInit {
   public client: RedisType;
-  constructor (
-    private readonly redisService: RedisService,
-  ) {
-    // this.redisService = new RedisService(redisConfig);
-  }
 
   onModuleInit() {
-    // const redisConfig = (<IRedisApiCacheConfig>global[ConfigProvider]).redisConfig;
-    // const redisService = new RedisService({
-    //   defaultKey: '',
-    //   clients: {
-        
-    //   },
-    //   size: 0,
-    // });
-    this.client = this.redisService.getClient();
-    // console.log(redisConfig, '===')
-    // const {username, password, host, port, db} = redisConfig;
-    // const url: string = `redis://${username}:${password}@${host}:${port}/${db}?allowUsernameInURI=true`;
-    // this.client = new Redis(url);
-    // console.log('初始化1', url);
-    // console.log('初始化2', this.client);
+    this.client = this.connectRedis;
   }
 
   /**
@@ -46,10 +25,11 @@ export class RedisCacheService implements OnModuleInit {
    */
   public async set(key: string, value: any, second?: number): Promise<any> {
     value = JSON.stringify(value);
+    const client = this.client ?? this.connectRedis;
     if (!second) {
-      await this.client.set(key, value);
+      await client.set(key, value);
     } else {
-      await this.client.set(key, value, 'EX', second);
+      await client.set(key, value, 'EX', second);
     }
   }
 
@@ -61,8 +41,8 @@ export class RedisCacheService implements OnModuleInit {
    * @param key {String} 
    */
   public async get(key: string): Promise<any> {
-    console.log('redis-get方法', this.client);
-    const data = await this.client.get(key);
+    const client = this.client ?? this.connectRedis;
+    const data = await client.get(key);
     if (data) {
       return JSON.parse(data);
     } else {
@@ -72,25 +52,21 @@ export class RedisCacheService implements OnModuleInit {
 
   /**
    * @Author: 水痕
-   * @Date: 2020-01-17 14:58:12
+   * @Date: 2021-03-31 10:13:20
    * @LastEditors: 水痕
-   * @Description: 根据key删除redis缓存数据
-   * @param key {String}  
-   * @return: 
+   * @Description: 连接redis句柄
+   * @param {*}
+   * @return {*}
    */
-  public async del(key: string): Promise<any> {
-    await this.client.del(key);
-  }
-
-  /**
-   * @Author: 水痕
-   * @Date: 2020-01-17 15:49:34
-   * @LastEditors: 水痕
-   * @Description: 清空redis的缓存
-   * @param {type} 
-   * @return: 
-   */
-  public async flushall(): Promise<any> {
-    await this.client.flushall();
+  private get connectRedis(): RedisType {
+    const redisConfig = (<IRedisApiCacheConfig>global[REDIS_CONFIG_PROVIDER])?.redisConfig;
+    const { username = '', password = '', host = '127.0.0.1', port = 6379, db = 0 } = redisConfig || {};
+    let url: string = null;
+    if (username && password) {
+      url = `redis://${username}:${password}@${host}:${port}/${db}?allowUsernameInURI=true`;
+    } else {
+      url = `redis://${host}:${port}/${db}?allowUsernameInURI=true`
+    }
+    return new Redis(url);
   }
 }

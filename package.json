@@ -1,6 +1,6 @@
 {
-  "name": "redis-cache-api",
-  "version": "0.0.9",
+  "name": "nest-api-cache",
+  "version": "0.0.6",
   "description": "使用redis实现nestjs接口层面的缓存",
   "author": "kuangshp@126.com",
   "license": "MIT",
@@ -13,10 +13,11 @@
     "redis",
     "nestjs",
     "typescript",
+    "nest-api-cache",
     "缓存",
     "接口缓存"
   ],
-  "homepage": "https://github.com/kuangshp/redis-cache-api",
+  "homepage": "https://github.com/kuangshp/nest-api-cache",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -35,8 +36,7 @@
   },
   "dependencies": {
     "@types/ioredis": "^4.22.2",
-    "ioredis": "^4.24.5",
-    "nestjs-redis": "^1.3.3"
+    "ioredis": "^4.24.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
