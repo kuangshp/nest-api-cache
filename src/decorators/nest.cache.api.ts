@@ -6,13 +6,12 @@
  * @Company: 
  * @Date: 2021-03-09 15:47:06
  * @LastEditors: 水痕
- * @LastEditTime: 2021-04-25 12:45:32
+ * @LastEditTime: 2021-04-25 14:01:00
  * @FilePath: /nest-api-cache/src/decorators/nest.cache.api.ts
  */
 import { applyDecorators, SetMetadata } from '@nestjs/common';
-import { REDIS_CACHE_KEY, REDIS_CACHE_EX_SECOND_KEY, REDIS_CONFIG_PROVIDER } from '../constants';
+import { REDIS_CACHE_KEY, REDIS_CACHE_EX_SECOND_KEY } from '../constants';
 import redisCacheConfig from '../config/redisCache.config';
-import { IRedisApiCacheConfig } from '../interfaces';
 
 // 是否缓存
 const isCache = true;

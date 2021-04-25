@@ -15,13 +15,10 @@ import { RedisCacheService } from './../../services/redis-cache/redis-cache.serv
  */
 @Injectable()
 export class NestApiCacheInterceptor implements NestInterceptor {
-  // private redisCacheService: RedisCacheService;
-  // constructor() {
-  //   this.redisCacheService = new RedisCacheService()
-  // }
   constructor(
     private readonly redisCacheService: RedisCacheService
   ) {}
+
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     const request: Request = context.switchToHttp().getRequest();
     // 反射的方法获取接口是否需要缓存
@@ -31,10 +28,8 @@ export class NestApiCacheInterceptor implements NestInterceptor {
       const redisKey = this.redisCacheKey(request.method, request.url);
       const redisData = await this.redisCacheService.get(redisKey);
       if (redisData) {
-        console.log('redis缓存')
         return of(redisData);
       } else {
-        console.log('数据库')
         return next.handle().pipe(map(data => {
           this.redisCacheService.set(redisKey, data, redisEXSecond);
           return data;

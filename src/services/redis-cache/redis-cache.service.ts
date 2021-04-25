@@ -9,7 +9,8 @@ import * as Redis from 'ioredis';
 export class RedisCacheService implements OnModuleInit {
   public client: RedisType;
   constructor (
-    @Inject(REDIS_CACHE_KEY) private readonly redisConfig: IRedisConfig,
+    @Inject(REDIS_CACHE_KEY) 
+    private readonly redisConfig: IRedisConfig,
   ) { }
   onModuleInit() {
     this.client = this.connectRedis;
