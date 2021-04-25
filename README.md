@@ -27,14 +27,6 @@
   })
   ```
 
-* 在`main.ts`中全局使用拦截器
-
-  ```typescript
-  import { NestApiCacheInterceptor } from 'nest-api-cache';
-  // 全局使用拦截器
-  app.useGlobalInterceptors(new NestApiCacheInterceptor());
-  ```
-
 * 在需要走`redis`的接口上加上自定义装饰器
 
   ```typescript
@@ -64,5 +56,6 @@
     return await this.roleService.roleList(roleReqDto);
   }
   ```
+
   
-  
+
