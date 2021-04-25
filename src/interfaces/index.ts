@@ -1,4 +1,4 @@
-interface IRedisConfig {
+export interface IRedisConfig {
   /** redis端口号 */
   port?: number,
   /** redis 地址 */

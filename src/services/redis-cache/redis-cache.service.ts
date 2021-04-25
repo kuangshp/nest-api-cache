@@ -1,14 +1,16 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { Redis as RedisType } from 'ioredis';
-import { REDIS_CONFIG_PROVIDER } from 'src/constants';
-import { IRedisApiCacheConfig } from 'src/interfaces';
+import { REDIS_CACHE_KEY } from './../../constants';
+import { IRedisConfig } from './../../interfaces';
 import * as Redis from 'ioredis';
 
 
 @Injectable({})
 export class RedisCacheService implements OnModuleInit {
   public client: RedisType;
-
+  constructor (
+    @Inject(REDIS_CACHE_KEY) private readonly redisConfig: IRedisConfig,
+  ) { }
   onModuleInit() {
     this.client = this.connectRedis;
   }
@@ -59,8 +61,8 @@ export class RedisCacheService implements OnModuleInit {
    * @return {*}
    */
   private get connectRedis(): RedisType {
-    const redisConfig = (<IRedisApiCacheConfig>global[REDIS_CONFIG_PROVIDER])?.redisConfig;
-    const { username = '', password = '', host = '127.0.0.1', port = 6379, db = 0 } = redisConfig || {};
+    // const redisConfig = (<IRedisApiCacheConfig>global[REDIS_CONFIG_PROVIDER])?.redisConfig;
+    const { username = '', password = '', host = '127.0.0.1', port = 6379, db = 0 } = this.redisConfig || {};
     let url: string = null;
     if (username && password) {
       url = `redis://${username}:${password}@${host}:${port}/${db}?allowUsernameInURI=true`;
